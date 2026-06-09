@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'maven-publish'
 }
 
 android {
@@ -22,9 +23,40 @@ android {
             jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
 }
 
 dependencies {
     implementation 'androidx.annotation:annotation:1.7.1'
     implementation 'com.facebook.fbjni:fbjni:0.6.0'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = rootProject.ext.groupId
+                artifactId = 'hermes-engine'
+                version = rootProject.ext.versionName
+
+                pom {
+                    name = 'Hermes Engine'
+                    description = 'Prebuilt Hermes JavaScript engine native libraries for Android'
+                    url = 'https://github.com/nicolo-ribaudo/hermes'
+                    licenses {
+                        license {
+                            name = 'MIT License'
+                            url = 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

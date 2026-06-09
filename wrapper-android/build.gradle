@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'maven-publish'
 }
 
 android {
@@ -34,9 +35,40 @@ android {
             version "3.22.1"
         }
     }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
 }
 
 dependencies {
     implementation project(':hermes-engine')
     implementation 'androidx.annotation:annotation:1.7.1'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = rootProject.ext.groupId
+                artifactId = 'wrapper-android'
+                version = rootProject.ext.versionName
+
+                pom {
+                    name = 'Hermes Android Wrapper'
+                    description = 'Android wrapper for Hermes JS engine with QuickJS-compatible API'
+                    url = 'https://github.com/walid1992/hermes-android'
+                    licenses {
+                        license {
+                            name = 'MIT License'
+                            url = 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
