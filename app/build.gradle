@@ -38,7 +38,6 @@ android {
 }
 
 dependencies {
-    implementation project(':wrapper-android')
     implementation project(':wrapper-java')
     implementation project(':hermes-engine')
     implementation 'androidx.appcompat:appcompat:1.6.1'

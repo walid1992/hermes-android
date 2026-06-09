@@ -16,6 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "hermes-android-wrapper"
 include ':app'
-include ':wrapper-android'
 include ':wrapper-java'
 include ':hermes-engine'

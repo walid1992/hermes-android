@@ -13,7 +13,7 @@ import com.hermes.wrapper.JSObject;
 import com.hermes.wrapper.JSArray;
 import com.hermes.wrapper.JSFunction;
 import com.hermes.wrapper.JSCallFunction;
-import com.hermes.wrapper.android.HermesLoader;
+import com.hermes.wrapper.HermesLoader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Initialize Hermes
-        HermesLoader.init(getApplicationContext());
+        HermesLoader.init();
         hermesContext = new HermesContext();
 
         inputField = findViewById(R.id.input_field);

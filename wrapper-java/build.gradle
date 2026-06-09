@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.hermes.wrapper.java'
+    namespace 'com.hermes.wrapper'
     compileSdk 34
 
     defaultConfig {

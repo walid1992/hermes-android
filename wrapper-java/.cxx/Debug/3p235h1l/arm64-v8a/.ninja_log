@@ -1,5 +1,0 @@
-# ninja log v5
-0	1356	1781003224025689904	CMakeFiles/hermes_wrapper.dir/cpp/hermes_context_jni.cpp.o	fd253902cc2c111a
-1356	1463	1781003224132915840	/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/build/intermediates/cxx/Debug/3p235h1l/obj/arm64-v8a/libhermes_wrapper.so	bcccda44816239e1
-3	2147	1781003858368981083	CMakeFiles/hermes_wrapper.dir/cpp/hermes_context_jni.cpp.o	fd253902cc2c111a
-2148	2382	1781003858606843115	/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/build/intermediates/cxx/Debug/3p235h1l/obj/arm64-v8a/libhermes_wrapper.so	bcccda44816239e1
