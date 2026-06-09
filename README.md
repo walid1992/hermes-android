@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.walid1992.hermes-android:wrapper-android:v0.1.0'
+    implementation 'com.github.walid1992.hermes-android:wrapper-android:0.1.0'
 }
 ```
 
