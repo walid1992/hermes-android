@@ -14,7 +14,12 @@ import com.hermes.engine.HermesEngine;
  * Usage:
  * <pre>
  *   HermesContext ctx = new HermesContext();
- *   String result = ctx.eval("1 + 2");
+ *   JSObject global = ctx.getGlobalObject();
+ *   JSObject obj = ctx.createNewJSObject();
+ *   obj.setProperty("name", "Hermes");
+ *   global.setProperty("config", obj);
+ *   String result = ctx.eval("config.name");
+ *   obj.release();
  *   ctx.close();
  * </pre>
  */
@@ -23,9 +28,47 @@ public class HermesContext implements AutoCloseable {
     private long nativeHandle;
     private boolean closed = false;
 
+    static {
+        // Load hermes_wrapper native library (contains our JNI implementations)
+        HermesEngine.ensureLoaded();         // load dependencies first: fbjni, jsi, hermes
+        System.loadLibrary("hermes_wrapper"); // then our own JNI bridge
+    }
+
     public HermesContext() {
-        HermesEngine.ensureLoaded();
         nativeHandle = nativeCreate();
+    }
+
+    /**
+     * Get the global object of the JavaScript context.
+     * DO NOT release the returned object - it is owned by the context.
+     */
+    @NonNull
+    public JSObject getGlobalObject() {
+        checkNotClosed();
+        long handle = nativeGetGlobalObject(nativeHandle);
+        return new JSObject(nativeHandle, handle);
+    }
+
+    /**
+     * Create a new empty JavaScript object.
+     * Must be released after use unless returned to JavaScript.
+     */
+    @NonNull
+    public JSObject createNewJSObject() {
+        checkNotClosed();
+        long handle = nativeCreateObject(nativeHandle);
+        return new JSObject(nativeHandle, handle);
+    }
+
+    /**
+     * Create a new empty JavaScript array.
+     * Must be released after use unless returned to JavaScript.
+     */
+    @NonNull
+    public JSArray createNewJSArray() {
+        checkNotClosed();
+        long handle = nativeCreateArray(nativeHandle);
+        return new JSArray(nativeHandle, handle);
     }
 
     /**
@@ -62,37 +105,11 @@ public class HermesContext implements AutoCloseable {
     }
 
     /**
-     * Set a global variable in the JavaScript context.
+     * Execute a JavaScript script (no return value).
      */
-    public void setGlobal(@NonNull String name, @NonNull String value) {
-        checkNotClosed();
-        nativeSetGlobal(nativeHandle, name, value);
-    }
-
-    /**
-     * Get a global variable from the JavaScript context.
-     */
-    @NonNull
-    public String getGlobal(@NonNull String name) {
-        checkNotClosed();
-        return nativeGetGlobal(nativeHandle, name);
-    }
-
-    /**
-     * Execute a JavaScript script file from assets.
-     */
-    public void runScript(@NonNull String script) {
+    public void execute(@NonNull String script) {
         checkNotClosed();
         nativeRunScript(nativeHandle, script);
-    }
-
-    /**
-     * Call a JavaScript function by name with JSON arguments.
-     */
-    @NonNull
-    public String callFunction(@NonNull String funcName, @NonNull String argsJson) {
-        checkNotClosed();
-        return nativeCallFunction(nativeHandle, funcName, argsJson);
     }
 
     @Override
@@ -103,21 +120,32 @@ public class HermesContext implements AutoCloseable {
         }
     }
 
+    public boolean isClosed() {
+        return closed;
+    }
+
+    /**
+     * Get native context handle. Used by JSObject/JSArray/JSFunction internally.
+     */
+    long getNativeHandle() {
+        return nativeHandle;
+    }
+
     private void checkNotClosed() {
         if (closed) {
             throw new IllegalStateException("HermesContext has been closed");
         }
     }
 
-    // Native methods
+    // --- Native methods ---
     private native long nativeCreate();
     private native void nativeDestroy(long handle);
+    private native long nativeGetGlobalObject(long handle);
+    private native long nativeCreateObject(long handle);
+    private native long nativeCreateArray(long handle);
     private native String nativeEval(long handle, String code);
     private native boolean nativeEvalBoolean(long handle, String code);
     private native double nativeEvalDouble(long handle, String code);
     private native int nativeEvalInt(long handle, String code);
-    private native void nativeSetGlobal(long handle, String name, String value);
-    private native String nativeGetGlobal(long handle, String name);
     private native void nativeRunScript(long handle, String script);
-    private native String nativeCallFunction(long handle, String funcName, String argsJson);
 }

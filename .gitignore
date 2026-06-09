@@ -35,4 +35,13 @@ captures/
 Thumbs.db
 
 # Hermes binaries (download separately)
-*.so
+#*.so
+
+# CMake 构建缓存目录
+.cxx/
+
+# 或者更精细地忽略（如果只想忽略 CMake API 回复）
+.cxx/*/.cmake/api/v1/reply/
+*.cmake
+CMakeCache.txt
+CMakeFiles/

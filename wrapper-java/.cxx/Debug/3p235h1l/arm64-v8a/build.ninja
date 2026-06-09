@@ -53,7 +53,7 @@ build CMakeFiles/hermes_wrapper.dir/cpp/hermes_context_jni.cpp.o: CXX_COMPILER__
   DEFINES = -Dhermes_wrapper_EXPORTS
   DEP_FILE = CMakeFiles/hermes_wrapper.dir/cpp/hermes_context_jni.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++17 -O2 -fno-limit-debug-info  -fPIC
-  INCLUDES = -I/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/src/main/../../../../hermes-engine/src/main/jniLibs
+  INCLUDES = -I/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/src/main/cpp/include
   OBJECT_DIR = CMakeFiles/hermes_wrapper.dir
   OBJECT_FILE_DIR = CMakeFiles/hermes_wrapper.dir/cpp
   TARGET_COMPILE_PDB = CMakeFiles/hermes_wrapper.dir/
@@ -67,10 +67,10 @@ build CMakeFiles/hermes_wrapper.dir/cpp/hermes_context_jni.cpp.o: CXX_COMPILER__
 #############################################
 # Link the shared library /Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/build/intermediates/cxx/Debug/3p235h1l/obj/arm64-v8a/libhermes_wrapper.so
 
-build /Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/build/intermediates/cxx/Debug/3p235h1l/obj/arm64-v8a/libhermes_wrapper.so: CXX_SHARED_LIBRARY_LINKER__hermes_wrapper_Debug CMakeFiles/hermes_wrapper.dir/cpp/hermes_context_jni.cpp.o | /Users/admin/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/21/liblog.so
+build /Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/build/intermediates/cxx/Debug/3p235h1l/obj/arm64-v8a/libhermes_wrapper.so: CXX_SHARED_LIBRARY_LINKER__hermes_wrapper_Debug CMakeFiles/hermes_wrapper.dir/cpp/hermes_context_jni.cpp.o | /Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/src/main/../../../hermes-engine/src/main/jniLibs/arm64-v8a/libhermes.so /Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/src/main/../../../hermes-engine/src/main/jniLibs/arm64-v8a/libjsi.so /Users/admin/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/21/liblog.so
   LANGUAGE_COMPILE_FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++17 -O2 -fno-limit-debug-info
   LINK_FLAGS = -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments
-  LINK_LIBRARIES = /Users/admin/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/21/liblog.so  -latomic -lm
+  LINK_LIBRARIES = /Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/src/main/../../../hermes-engine/src/main/jniLibs/arm64-v8a/libhermes.so  /Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/src/main/../../../hermes-engine/src/main/jniLibs/arm64-v8a/libjsi.so  /Users/admin/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/21/liblog.so  -latomic -lm
   OBJECT_DIR = CMakeFiles/hermes_wrapper.dir
   POST_BUILD = :
   PRE_LINK = :

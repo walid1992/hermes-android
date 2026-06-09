@@ -9,9 +9,10 @@ public class HermesEngine {
 
     public static synchronized void ensureLoaded() {
         if (!loaded) {
-            // Load dependencies in correct order
-            System.loadLibrary("c++_shared");
+            // fbjni loads its own native lib + Java classes
+            // This triggers System.loadLibrary("fbjni") internally
             System.loadLibrary("fbjni");
+            // Load Hermes and JSI
             System.loadLibrary("jsi");
             System.loadLibrary("hermes");
             loaded = true;

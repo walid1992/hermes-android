@@ -22,7 +22,10 @@
       "abi": "x86",
       "artifactName": "hermes_wrapper",
       "output": "/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/build/intermediates/cxx/Debug/3p235h1l/obj/x86/libhermes_wrapper.so",
-      "runtimeFiles": []
+      "runtimeFiles": [
+        "/Users/admin/Desktop/dev/hermes-android-wrapper/hermes-engine/src/main/jniLibs/x86/libhermes.so",
+        "/Users/admin/Desktop/dev/hermes-android-wrapper/hermes-engine/src/main/jniLibs/x86/libjsi.so"
+      ]
     }
   },
   "toolchains": {

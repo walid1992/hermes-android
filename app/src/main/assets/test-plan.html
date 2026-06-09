@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hermes Android Wrapper - API Test Plan</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 24px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #58a6ff;
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #8b949e;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+        h2 {
+            color: #79c0ff;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #21262d;
+        }
+        .test-group {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .test-group h3 {
+            color: #d2a8ff;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        .test-case {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .test-case:last-child { margin-bottom: 0; }
+        .status {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+        .status.pending { background: #30363d; border: 2px solid #484f58; }
+        .status.pass { background: #238636; border: 2px solid #2ea043; }
+        .status.fail { background: #da3633; border: 2px solid #f85149; }
+        .test-info { flex: 1; }
+        .test-name { color: #c9d1d9; font-weight: 500; }
+        .test-desc { color: #8b949e; font-size: 13px; margin-top: 4px; }
+        .test-code {
+            background: #1c2128;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 12px;
+            color: #a5d6ff;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .expected {
+            color: #7ee787;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .summary {
+            position: sticky;
+            top: 0;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 24px;
+            z-index: 10;
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-item .count {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .summary-item .label {
+            font-size: 12px;
+            color: #8b949e;
+        }
+        .count-total { color: #58a6ff; }
+        .count-pass { color: #2ea043; }
+        .count-fail { color: #f85149; }
+        .count-pending { color: #484f58; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px 12px;
+            border: 1px solid #30363d;
+        }
+        th {
+            background: #1c2128;
+            color: #79c0ff;
+            font-size: 13px;
+        }
+        td {
+            font-size: 13px;
+        }
+        .api-tag {
+            display: inline-block;
+            background: #1f6feb33;
+            color: #58a6ff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🔧 Hermes Android Wrapper</h1>
+<p class="subtitle">API Test Plan &amp; Verification — Click status circles to toggle pass/fail/pending</p>
+
+<div class="summary">
+    <div class="summary-item">
+        <div class="count count-total" id="total">24</div>
+        <div class="label">Total Tests</div>
+    </div>
+    <div class="summary-item">
+        <div class="count count-pass" id="passed">0</div>
+        <div class="label">Passed</div>
+    </div>
+    <div class="summary-item">
+        <div class="count count-fail" id="failed">0</div>
+        <div class="label">Failed</div>
+    </div>
+    <div class="summary-item">
+        <div class="count count-pending" id="pending">24</div>
+        <div class="label">Pending</div>
+    </div>
+</div>
+
+<h2>1. HermesContext — Core Runtime</h2>
+
+<div class="test-group">
+    <h3>Context Lifecycle</h3>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">Create and close context</div>
+            <div class="test-desc">HermesContext should create without crash, close() releases native memory</div>
+            <div class="test-code">HermesContext ctx = new HermesContext();
+ctx.close();
+assert ctx.isClosed();</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">eval() basic expression</div>
+            <div class="test-desc">Evaluate simple expression returns correct string</div>
+            <div class="test-code">String r = ctx.eval("1 + 2 + 3");</div>
+            <div class="expected">Expected: "6"</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">eval() string result</div>
+            <div class="test-desc">Last expression value returned as string</div>
+            <div class="test-code">String r = ctx.eval("'hello' + ' ' + 'world'");</div>
+            <div class="expected">Expected: "hello world"</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">evalInt() / evalDouble() / evalBoolean()</div>
+            <div class="test-desc">Typed eval returns correct Java primitive</div>
+            <div class="test-code">int i = ctx.evalInt("10 * 5");       // 50
+double d = ctx.evalDouble("22/7");   // 3.14...
+boolean b = ctx.evalBoolean("1>0");  // true</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">execute() no return</div>
+            <div class="test-desc">execute() runs script without returning, no crash</div>
+            <div class="test-code">ctx.execute("var x = 42;");
+String r = ctx.eval("x");  // "42"</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">JS Error handling</div>
+            <div class="test-desc">Syntax/runtime errors throw RuntimeException on Java side</div>
+            <div class="test-code">try { ctx.eval("@#$invalid"); } catch (RuntimeException e) { /* JSError */ }</div>
+        </div>
+    </div>
+</div>
+
+<h2>2. JSObject — Set Property</h2>
+
+<div class="test-group">
+    <h3>Create and Set Properties from Java</h3>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">setProperty — String</div>
+            <div class="test-code">JSObject obj = ctx.createNewJSObject();
+obj.setProperty("name", "Hermes Wrapper");
+global.setProperty("obj", obj);
+ctx.eval("obj.name");  // "Hermes Wrapper"</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">setProperty — int / double / boolean</div>
+            <div class="test-code">obj.setProperty("year", 2025);
+obj.setProperty("version", 1.1);
+obj.setProperty("active", true);</div>
+            <div class="expected">obj.year=2025, obj.version=1.1, obj.active=true</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">setProperty — nested JSObject</div>
+            <div class="test-code">JSObject child = ctx.createNewJSObject();
+child.setProperty("x", 10);
+obj.setProperty("nested", child);
+ctx.eval("obj.nested.x");  // "10"</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">setProperty — JSCallFunction</div>
+            <div class="test-desc">Inject a Java lambda as JS function property</div>
+            <div class="test-code">obj.setProperty("greet", (JSCallFunction) args -> "Hello " + args[0]);
+ctx.eval("obj.greet('World')");  // "Hello World"</div>
+        </div>
+    </div>
+</div>
+
+<h2>3. JSObject — Get Property</h2>
+
+<div class="test-group">
+    <h3>Read JS Properties from Java</h3>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">getString / getInteger / getDouble / getBoolean</div>
+            <div class="test-code">ctx.execute("var p = {name:'test', age:30, score:9.5, ok:true}");
+JSObject p = global.getJSObject("p");
+p.getString("name");    // "test"
+p.getInteger("age");    // 30
+p.getDouble("score");   // 9.5
+p.getBoolean("ok");     // true</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">getJSObject — nested object</div>
+            <div class="test-code">ctx.execute("var o = {child: {val: 42}}");
+JSObject child = global.getJSObject("o").getJSObject("child");
+child.getInteger("val");  // 42</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">getJSFunction — call JS function from Java</div>
+            <div class="test-code">ctx.execute("var math = { add: function(a,b){return a+b;} }");
+JSFunction fn = global.getJSObject("math").getJSFunction("add");
+Object result = fn.call(3, 4);  // 7.0 (Double)</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">hasProperty</div>
+            <div class="test-code">ctx.execute("var h = {exists: 1}");
+JSObject h = global.getJSObject("h");
+h.hasProperty("exists");    // true
+h.hasProperty("missing");   // false</div>
+        </div>
+    </div>
+</div>
+
+<h2>4. JSArray</h2>
+
+<div class="test-group">
+    <h3>Array Operations</h3>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">createNewJSArray + set elements</div>
+            <div class="test-code">JSArray arr = ctx.createNewJSArray();
+arr.set(0, "a");
+arr.set(1, "b");
+arr.set(2, "c");
+global.setProperty("arr", arr);
+ctx.eval("arr.join('-')");  // "a-b-c"</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">Read array from JS — length() + get()</div>
+            <div class="test-code">ctx.execute("var nums = [10, 20, 30]");
+JSArray nums = global.getJSArray("nums");
+nums.length();  // 3
+nums.get(0);    // 10.0 (Double)
+nums.get(2);    // 30.0</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">Mixed type array</div>
+            <div class="test-code">ctx.execute("var mixed = [1, 'hello', true, null, {x:1}]");
+// get(0) → Double, get(1) → String, get(2) → Boolean, get(3) → null, get(4) → JSObject</div>
+        </div>
+    </div>
+</div>
+
+<h2>5. JSFunction — Call from Java</h2>
+
+<div class="test-group">
+    <h3>Calling JS Functions</h3>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">call() with primitive args</div>
+            <div class="test-code">ctx.execute("function add(a,b) { return a+b; }");
+JSFunction fn = global.getJSFunction("add");
+Object r = fn.call(10, 20);  // 30.0</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">call() returns string</div>
+            <div class="test-code">ctx.execute("function greet(n) { return 'Hi ' + n; }");
+JSFunction fn = global.getJSFunction("greet");
+fn.call("Bob");  // "Hi Bob" (String)</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">callVoid() — no return</div>
+            <div class="test-code">ctx.execute("var log = ''; function append(s) { log += s; }");
+JSFunction fn = global.getJSFunction("append");
+fn.callVoid("test");
+ctx.eval("log");  // "test"</div>
+        </div>
+    </div>
+</div>
+
+<h2>6. JSCallFunction — Java Callback</h2>
+
+<div class="test-group">
+    <h3>Java Functions Callable from JS</h3>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">Basic callback</div>
+            <div class="test-code">global.setProperty("javaAdd", (JSCallFunction) args -> {
+    return ((Number)args[0]).doubleValue() + ((Number)args[1]).doubleValue();
+});
+ctx.eval("javaAdd(3, 4)");  // "7"</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">Callback returning function (higher-order)</div>
+            <div class="test-code">global.setProperty("multiplier", (JSCallFunction) args -> {
+    double f = ((Number)args[0]).doubleValue();
+    return (JSCallFunction) inner -> ((Number)inner[0]).doubleValue() * f;
+});
+ctx.eval("multiplier(5)(6)");  // "30"</div>
+        </div>
+    </div>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">Callback with string args</div>
+            <div class="test-code">global.setProperty("upper", (JSCallFunction) args -> ((String)args[0]).toUpperCase());
+ctx.eval("upper('hello')");  // "HELLO"</div>
+        </div>
+    </div>
+</div>
+
+<h2>7. Object Lifecycle &amp; Release</h2>
+
+<div class="test-group">
+    <h3>Memory Management</h3>
+    <div class="test-case">
+        <div class="status pending" onclick="toggleStatus(this)"></div>
+        <div class="test-info">
+            <div class="test-name">release() prevents use-after-free</div>
+            <div class="test-desc">After release(), calling methods throws IllegalStateException</div>
+            <div class="test-code">JSObject obj = ctx.createNewJSObject();
+obj.release();
+try { obj.getString("x"); } catch (IllegalStateException e) { /* expected */ }</div>
+        </div>
+    </div>
+</div>
+
+<h2>API Coverage Matrix</h2>
+
+<table>
+    <tr>
+        <th>Class</th>
+        <th>Method</th>
+        <th>Status</th>
+    </tr>
+    <tr><td>HermesContext</td><td>eval(String)</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>HermesContext</td><td>evalInt / evalDouble / evalBoolean</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>HermesContext</td><td>execute(String)</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>HermesContext</td><td>getGlobalObject()</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>HermesContext</td><td>createNewJSObject()</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>HermesContext</td><td>createNewJSArray()</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>HermesContext</td><td>close()</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSObject</td><td>setProperty(name, String/int/double/boolean)</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSObject</td><td>setProperty(name, JSObject)</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSObject</td><td>setProperty(name, JSCallFunction)</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSObject</td><td>getString / getInteger / getDouble / getBoolean</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSObject</td><td>getJSObject / getJSArray / getJSFunction</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSObject</td><td>hasProperty(name)</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSObject</td><td>release()</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSArray</td><td>length()</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSArray</td><td>get(index) / set(index, value)</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSFunction</td><td>call(args...)</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSFunction</td><td>callVoid(args...)</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>JSCallFunction</td><td>call(Object[] args) → Object</td><td><span class="api-tag">Implemented</span></td></tr>
+    <tr><td>HermesContext</td><td>compile() — ByteCode</td><td style="color:#8b949e">Planned</td></tr>
+    <tr><td>HermesContext</td><td>evaluateModule() — ESModule</td><td style="color:#8b949e">Planned</td></tr>
+</table>
+
+<script>
+function toggleStatus(el) {
+    if (el.classList.contains('pending')) {
+        el.classList.remove('pending');
+        el.classList.add('pass');
+    } else if (el.classList.contains('pass')) {
+        el.classList.remove('pass');
+        el.classList.add('fail');
+    } else {
+        el.classList.remove('fail');
+        el.classList.add('pending');
+    }
+    updateCounts();
+}
+
+function updateCounts() {
+    const all = document.querySelectorAll('.status');
+    const pass = document.querySelectorAll('.status.pass').length;
+    const fail = document.querySelectorAll('.status.fail').length;
+    const pending = document.querySelectorAll('.status.pending').length;
+    document.getElementById('total').textContent = all.length;
+    document.getElementById('passed').textContent = pass;
+    document.getElementById('failed').textContent = fail;
+    document.getElementById('pending').textContent = pending;
+}
+</script>
+
+</body>
+</html>

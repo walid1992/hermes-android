@@ -21,7 +21,10 @@
       "artifactName": "hermes_wrapper",
       "abi": "armeabi-v7a",
       "output": "/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/build/intermediates/cxx/Debug/3p235h1l/obj/armeabi-v7a/libhermes_wrapper.so",
-      "runtimeFiles": []
+      "runtimeFiles": [
+        "/Users/admin/Desktop/dev/hermes-android-wrapper/hermes-engine/src/main/jniLibs/armeabi-v7a/libhermes.so",
+        "/Users/admin/Desktop/dev/hermes-android-wrapper/hermes-engine/src/main/jniLibs/armeabi-v7a/libjsi.so"
+      ]
     }
   }
 }

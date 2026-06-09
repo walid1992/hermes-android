@@ -242,9 +242,6 @@ CMAKE_TOOLCHAIN_FILE:FILEPATH=/Users/admin/Library/Android/sdk/ndk/25.1.8937393/
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
-//Path to Hermes include directory
-HERMES_INCLUDE_DIR:PATH=/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/src/main/../../../../hermes-engine/src/main/jniLibs
-
 //Value Computed by CMake
 hermes-wrapper_BINARY_DIR:STATIC=/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/.cxx/Debug/3p235h1l/arm64-v8a
 

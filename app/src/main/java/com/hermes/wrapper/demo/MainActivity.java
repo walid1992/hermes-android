@@ -1,5 +1,6 @@
 package com.hermes.wrapper.demo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -8,6 +9,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hermes.wrapper.HermesContext;
+import com.hermes.wrapper.JSObject;
+import com.hermes.wrapper.JSArray;
+import com.hermes.wrapper.JSFunction;
+import com.hermes.wrapper.JSCallFunction;
 import com.hermes.wrapper.android.HermesLoader;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,11 +39,22 @@ public class MainActivity extends AppCompatActivity {
         Button runButton = findViewById(R.id.btn_run);
         runButton.setOnClickListener(v -> executeCode());
 
-        // Demo buttons
+        // Demo buttons - row 1
         findViewById(R.id.btn_demo_basic).setOnClickListener(v -> runBasicDemo());
         findViewById(R.id.btn_demo_function).setOnClickListener(v -> runFunctionDemo());
         findViewById(R.id.btn_demo_array).setOnClickListener(v -> runArrayDemo());
         findViewById(R.id.btn_demo_object).setOnClickListener(v -> runObjectDemo());
+
+        // Demo buttons - row 2 (new API tests)
+        findViewById(R.id.btn_demo_set_property).setOnClickListener(v -> runSetPropertyDemo());
+        findViewById(R.id.btn_demo_get_property).setOnClickListener(v -> runGetPropertyDemo());
+        findViewById(R.id.btn_demo_callback).setOnClickListener(v -> runCallbackDemo());
+        findViewById(R.id.btn_demo_jsarray).setOnClickListener(v -> runJSArrayDemo());
+
+        // Test Plan button
+        findViewById(R.id.btn_test_plan).setOnClickListener(v -> {
+            startActivity(new Intent(this, TestPlanActivity.class));
+        });
 
         appendOutput("Hermes Engine initialized!\n");
         appendOutput("Enter JavaScript code and tap Run.\n\n");
@@ -55,12 +71,14 @@ public class MainActivity extends AppCompatActivity {
             long start = System.currentTimeMillis();
             String result = hermesContext.eval(code);
             long elapsed = System.currentTimeMillis() - start;
-            appendOutput("> " + code + "\n");
+            appendOutput("> " + code.split("\n")[0] + (code.contains("\n") ? "..." : "") + "\n");
             appendOutput(result + " (" + elapsed + "ms)\n\n");
         } catch (Exception e) {
             appendOutput("[Error] " + e.getMessage() + "\n\n");
         }
     }
+
+    // ==================== JS-only demos ====================
 
     private void runBasicDemo() {
         String js = "// Basic calculations\n" +
@@ -70,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             "var product = a * b;\n" +
             "'Sum: ' + sum + ', Product: ' + product;";
         inputField.setText(js);
-        appendOutput("// Basic Demo loaded. Tap Run to execute.\n");
+        executeCode();
     }
 
     private void runFunctionDemo() {
@@ -85,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             "}\n" +
             "'Fibonacci(0-9): ' + results.join(', ');";
         inputField.setText(js);
-        appendOutput("// Function Demo loaded. Tap Run to execute.\n");
+        executeCode();
     }
 
     private void runArrayDemo() {
@@ -98,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             "'\\nSorted:   ' + sorted.join(', ') +\n" +
             "'\\nSum: ' + sum + ', Avg: ' + avg;";
         inputField.setText(js);
-        appendOutput("// Array Demo loaded. Tap Run to execute.\n");
+        executeCode();
     }
 
     private void runObjectDemo() {
@@ -114,7 +132,205 @@ public class MainActivity extends AppCompatActivity {
             "'\\nRPG: ' + player.stats.rebounds +\n" +
             "'\\nAPG: ' + player.stats.assists;";
         inputField.setText(js);
-        appendOutput("// Object Demo loaded. Tap Run to execute.\n");
+        executeCode();
+    }
+
+    // ==================== Java ↔ JS bridge demos ====================
+
+    /**
+     * Set Property demo: Create JSObject in Java, set properties, access from JS
+     * (mirrors QuickJS Wrapper's Set Property example)
+     */
+    private void runSetPropertyDemo() {
+        appendOutput("=== Set Property Demo ===\n");
+        try {
+            long start = System.currentTimeMillis();
+
+            JSObject globalObj = hermesContext.getGlobalObject();
+            JSObject repository = hermesContext.createNewJSObject();
+
+            // Set typed properties from Java
+            repository.setProperty("name", "Hermes Wrapper");
+            repository.setProperty("created", 2025);
+            repository.setProperty("version", 1.1);
+            repository.setProperty("signing_enabled", true);
+
+            // Set a Java callback as JS function
+            repository.setProperty("getUrl", (JSCallFunction) args -> {
+                return "https://github.com/aspect-build/hermes-wrapper";
+            });
+
+            // Attach to global
+            globalObj.setProperty("repository", repository);
+            repository.release();
+
+            // Now access from JavaScript
+            String name = hermesContext.eval("repository.name");
+            String created = hermesContext.eval("repository.created");
+            String version = hermesContext.eval("repository.version");
+            String signing = hermesContext.eval("repository.signing_enabled");
+            String url = hermesContext.eval("repository.getUrl()");
+
+            long elapsed = System.currentTimeMillis() - start;
+
+            appendOutput("repository.name = " + name + "\n");
+            appendOutput("repository.created = " + created + "\n");
+            appendOutput("repository.version = " + version + "\n");
+            appendOutput("repository.signing_enabled = " + signing + "\n");
+            appendOutput("repository.getUrl() = " + url + "\n");
+            appendOutput("(" + elapsed + "ms)\n\n");
+        } catch (Exception e) {
+            appendOutput("[Error] " + e.getMessage() + "\n\n");
+        }
+    }
+
+    /**
+     * Get Property demo: Define object in JS, read properties from Java
+     * (mirrors QuickJS Wrapper's Get Property example)
+     */
+    private void runGetPropertyDemo() {
+        appendOutput("=== Get Property Demo ===\n");
+        try {
+            long start = System.currentTimeMillis();
+
+            // Define object in JavaScript
+            hermesContext.execute(
+                "var project = {\n" +
+                "  name: 'Hermes Wrapper',\n" +
+                "  created: 2025,\n" +
+                "  version: 1.1,\n" +
+                "  active: true,\n" +
+                "  getDesc: function(prefix) { return prefix + ': A Hermes JS engine wrapper for Android'; }\n" +
+                "};"
+            );
+
+            // Read properties from Java
+            JSObject globalObj = hermesContext.getGlobalObject();
+            JSObject project = globalObj.getJSObject("project");
+
+            String name = project.getString("name");
+            int created = project.getInteger("created");
+            double version = project.getDouble("version");
+            boolean active = project.getBoolean("active");
+
+            // Call function
+            JSFunction getDesc = project.getJSFunction("getDesc");
+            Object desc = getDesc.call("Info");
+            getDesc.release();
+            project.release();
+
+            long elapsed = System.currentTimeMillis() - start;
+
+            appendOutput("project.name = " + name + "\n");
+            appendOutput("project.created = " + created + "\n");
+            appendOutput("project.version = " + version + "\n");
+            appendOutput("project.active = " + active + "\n");
+            appendOutput("project.getDesc('Info') = " + desc + "\n");
+            appendOutput("(" + elapsed + "ms)\n\n");
+        } catch (Exception e) {
+            appendOutput("[Error] " + e.getMessage() + "\n\n");
+        }
+    }
+
+    /**
+     * Callback demo: Java function injected into JS, called from JS
+     */
+    private void runCallbackDemo() {
+        appendOutput("=== Java Callback Demo ===\n");
+        try {
+            long start = System.currentTimeMillis();
+
+            JSObject globalObj = hermesContext.getGlobalObject();
+
+            // Inject a Java function that JS can call
+            globalObj.setProperty("javaAdd", (JSCallFunction) args -> {
+                if (args.length >= 2) {
+                    double a = ((Number) args[0]).doubleValue();
+                    double b = ((Number) args[1]).doubleValue();
+                    return a + b;
+                }
+                return 0;
+            });
+
+            // Inject a string transform function
+            globalObj.setProperty("javaUpperCase", (JSCallFunction) args -> {
+                if (args.length >= 1 && args[0] instanceof String) {
+                    return ((String) args[0]).toUpperCase();
+                }
+                return "";
+            });
+
+            // Inject a function that returns a function (higher-order)
+            globalObj.setProperty("createMultiplier", (JSCallFunction) args -> {
+                double factor = args.length > 0 ? ((Number) args[0]).doubleValue() : 1;
+                return (JSCallFunction) innerArgs -> {
+                    double val = innerArgs.length > 0 ? ((Number) innerArgs[0]).doubleValue() : 0;
+                    return val * factor;
+                };
+            });
+
+            // Call from JavaScript
+            String r1 = hermesContext.eval("javaAdd(15, 27)");
+            String r2 = hermesContext.eval("javaUpperCase('hello hermes')");
+            String r3 = hermesContext.eval("var triple = createMultiplier(3); triple(7)");
+
+            long elapsed = System.currentTimeMillis() - start;
+
+            appendOutput("javaAdd(15, 27) = " + r1 + "\n");
+            appendOutput("javaUpperCase('hello hermes') = " + r2 + "\n");
+            appendOutput("createMultiplier(3)(7) = " + r3 + "\n");
+            appendOutput("(" + elapsed + "ms)\n\n");
+        } catch (Exception e) {
+            appendOutput("[Error] " + e.getMessage() + "\n\n");
+        }
+    }
+
+    /**
+     * JSArray demo: Create/manipulate arrays from Java
+     */
+    private void runJSArrayDemo() {
+        appendOutput("=== JSArray Demo ===\n");
+        try {
+            long start = System.currentTimeMillis();
+
+            JSObject globalObj = hermesContext.getGlobalObject();
+            JSArray colors = hermesContext.createNewJSArray();
+
+            // Set array elements from Java
+            colors.set(0, "red");
+            colors.set(1, "green");
+            colors.set(2, "blue");
+            colors.set(3, "yellow");
+
+            globalObj.setProperty("colors", colors);
+            colors.release();
+
+            // Manipulate in JS and read back
+            String result = hermesContext.eval(
+                "colors.push('purple');\n" +
+                "'Array: [' + colors.join(', ') + '], length: ' + colors.length"
+            );
+
+            // Read back array from JS
+            hermesContext.execute("var nums = [10, 20, 30, 40, 50]");
+            JSArray nums = globalObj.getJSArray("nums");
+            int len = nums.length();
+            StringBuilder sb = new StringBuilder("nums from Java: [");
+            for (int i = 0; i < len; i++) {
+                if (i > 0) sb.append(", ");
+                sb.append(nums.get(i));
+            }
+            sb.append("]");
+            nums.release();
+
+            long elapsed = System.currentTimeMillis() - start;
+
+            appendOutput(result + "\n");
+            appendOutput(sb.toString() + "\n");
+            appendOutput("(" + elapsed + "ms)\n\n");
+        } catch (Exception e) {
+            appendOutput("[Error] " + e.getMessage() + "\n\n");
+        }
     }
 
     private void appendOutput(String text) {

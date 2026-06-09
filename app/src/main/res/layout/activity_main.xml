@@ -8,17 +8,17 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hermes Android Demo"
-        android:textSize="20sp"
+        android:text="Hermes Android Wrapper Demo"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginBottom="8dp"/>
 
-    <!-- Demo buttons -->
+    <!-- Demo buttons row 1: JS execution -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="4dp">
 
         <Button
             android:id="@+id/btn_demo_basic"
@@ -27,8 +27,8 @@
             android:layout_weight="1"
             android:text="Basic"
             android:textAllCaps="false"
-            android:textSize="12sp"
-            android:layout_marginEnd="4dp"/>
+            android:textSize="11sp"
+            android:layout_marginEnd="2dp"/>
 
         <Button
             android:id="@+id/btn_demo_function"
@@ -37,8 +37,8 @@
             android:layout_weight="1"
             android:text="Function"
             android:textAllCaps="false"
-            android:textSize="12sp"
-            android:layout_marginEnd="4dp"/>
+            android:textSize="11sp"
+            android:layout_marginEnd="2dp"/>
 
         <Button
             android:id="@+id/btn_demo_array"
@@ -47,8 +47,8 @@
             android:layout_weight="1"
             android:text="Array"
             android:textAllCaps="false"
-            android:textSize="12sp"
-            android:layout_marginEnd="4dp"/>
+            android:textSize="11sp"
+            android:layout_marginEnd="2dp"/>
 
         <Button
             android:id="@+id/btn_demo_object"
@@ -57,32 +57,98 @@
             android:layout_weight="1"
             android:text="Object"
             android:textAllCaps="false"
-            android:textSize="12sp"/>
+            android:textSize="11sp"/>
+    </LinearLayout>
+
+    <!-- Demo buttons row 2: Java ↔ JS bridge -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/btn_demo_set_property"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="SetProp"
+            android:textAllCaps="false"
+            android:textSize="11sp"
+            android:layout_marginEnd="2dp"/>
+
+        <Button
+            android:id="@+id/btn_demo_get_property"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="GetProp"
+            android:textAllCaps="false"
+            android:textSize="11sp"
+            android:layout_marginEnd="2dp"/>
+
+        <Button
+            android:id="@+id/btn_demo_callback"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Callback"
+            android:textAllCaps="false"
+            android:textSize="11sp"
+            android:layout_marginEnd="2dp"/>
+
+        <Button
+            android:id="@+id/btn_demo_jsarray"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="JSArray"
+            android:textAllCaps="false"
+            android:textSize="11sp"/>
     </LinearLayout>
 
     <!-- Code input -->
     <EditText
         android:id="@+id/input_field"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:gravity="top|start"
         android:padding="8dp"
         android:background="#1E1E1E"
         android:textColor="#00FF00"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:fontFamily="monospace"
         android:hint="Enter JavaScript code..."
+        android:textColorHint="#666666"
         android:inputType="textMultiLine"
         android:layout_marginBottom="8dp"/>
 
-    <Button
-        android:id="@+id/btn_run"
+    <!-- Code input -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="▶ Run"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        android:layout_marginBottom="8dp"/>
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/btn_run"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="▶ Run"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btn_test_plan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="📋 Test Plan"
+            android:textAllCaps="false"
+            android:textSize="13sp"/>
+    </LinearLayout>
 
     <!-- Output -->
     <TextView
@@ -104,8 +170,9 @@
             android:id="@+id/output_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:fontFamily="monospace"/>
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:textColor="#333333"/>
     </ScrollView>
 
 </LinearLayout>
