@@ -13,7 +13,7 @@ buildscript {
 // Library coordinates — used by submodule publish configs
 ext {
     groupId = 'com.github.walid1992.hermes-android'
-    versionName = '0.1.0'
+    versionName = '0.1.1'
     versionCode = 1
 }
 
