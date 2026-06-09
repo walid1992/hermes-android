@@ -27,7 +27,11 @@ public class HermesLoader {
         try {
             HermesEngine.ensureLoaded();
             initialized = true;
-            Log.i(TAG, "Hermes engine initialized successfully");
+            if (HermesEngine.isHermesRuntimeLoaded()) {
+                Log.i(TAG, "Hermes engine initialized successfully");
+            } else {
+                Log.w(TAG, "Hermes runtime not loaded; running with JNI wrapper fallback");
+            }
         } catch (UnsatisfiedLinkError e) {
             Log.e(TAG, "Failed to load Hermes native library", e);
             throw new RuntimeException("Failed to load Hermes engine", e);

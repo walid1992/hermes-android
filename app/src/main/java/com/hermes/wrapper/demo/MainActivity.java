@@ -5,7 +5,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.hermes.wrapper.HermesContext;
 import com.hermes.wrapper.android.HermesLoader;
@@ -63,67 +63,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void runBasicDemo() {
-        String js = """
-            // Basic calculations
-            var a = 10;
-            var b = 20;
-            var sum = a + b;
-            var product = a * b;
-            'Sum: ' + sum + ', Product: ' + product;
-            """;
+        String js = "// Basic calculations\n" +
+            "var a = 10;\n" +
+            "var b = 20;\n" +
+            "var sum = a + b;\n" +
+            "var product = a * b;\n" +
+            "'Sum: ' + sum + ', Product: ' + product;";
         inputField.setText(js);
         appendOutput("// Basic Demo loaded. Tap Run to execute.\n");
     }
 
     private void runFunctionDemo() {
-        String js = """
-            // Function demo
-            function fibonacci(n) {
-                if (n <= 1) return n;
-                return fibonacci(n - 1) + fibonacci(n - 2);
-            }
-            
-            var results = [];
-            for (var i = 0; i < 10; i++) {
-                results.push(fibonacci(i));
-            }
-            'Fibonacci(0-9): ' + results.join(', ');
-            """;
+        String js = "// Function demo\n" +
+            "function fibonacci(n) {\n" +
+            "    if (n <= 1) return n;\n" +
+            "    return fibonacci(n - 1) + fibonacci(n - 2);\n" +
+            "}\n\n" +
+            "var results = [];\n" +
+            "for (var i = 0; i < 10; i++) {\n" +
+            "    results.push(fibonacci(i));\n" +
+            "}\n" +
+            "'Fibonacci(0-9): ' + results.join(', ');";
         inputField.setText(js);
         appendOutput("// Function Demo loaded. Tap Run to execute.\n");
     }
 
     private void runArrayDemo() {
-        String js = """
-            // Array operations
-            var data = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5];
-            var sorted = data.slice().sort(function(a, b) { return a - b; });
-            var sum = data.reduce(function(acc, v) { return acc + v; }, 0);
-            var avg = (sum / data.length).toFixed(2);
-            
-            'Original: ' + data.join(', ') +
-            '\nSorted:   ' + sorted.join(', ') +
-            '\nSum: ' + sum + ', Avg: ' + avg;
-            """;
+        String js = "// Array operations\n" +
+            "var data = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5];\n" +
+            "var sorted = data.slice().sort(function(a, b) { return a - b; });\n" +
+            "var sum = data.reduce(function(acc, v) { return acc + v; }, 0);\n" +
+            "var avg = (sum / data.length).toFixed(2);\n\n" +
+            "'Original: ' + data.join(', ') +\n" +
+            "'\\nSorted:   ' + sorted.join(', ') +\n" +
+            "'\\nSum: ' + sum + ', Avg: ' + avg;";
         inputField.setText(js);
         appendOutput("// Array Demo loaded. Tap Run to execute.\n");
     }
 
     private void runObjectDemo() {
-        String js = """
-            // Object demo
-            var player = {
-                name: "LeBron James",
-                team: "Lakers",
-                stats: { points: 27.1, rebounds: 7.5, assists: 7.4 }
-            };
-            
-            'Player: ' + player.name +
-            '\nTeam: ' + player.team +
-            '\nPPG: ' + player.stats.points +
-            '\nRPG: ' + player.stats.rebounds +
-            '\nAPG: ' + player.stats.assists;
-            """;
+        String js = "// Object demo\n" +
+            "var player = {\n" +
+            "    name: \"LeBron James\",\n" +
+            "    team: \"Lakers\",\n" +
+            "    stats: { points: 27.1, rebounds: 7.5, assists: 7.4 }\n" +
+            "};\n\n" +
+            "'Player: ' + player.name +\n" +
+            "'\\nTeam: ' + player.team +\n" +
+            "'\\nPPG: ' + player.stats.points +\n" +
+            "'\\nRPG: ' + player.stats.rebounds +\n" +
+            "'\\nAPG: ' + player.stats.assists;";
         inputField.setText(js);
         appendOutput("// Object Demo loaded. Tap Run to execute.\n");
     }

@@ -7,7 +7,7 @@ set(HERMES_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../../hermes-engine/sr
     CACHE PATH "Path to Hermes include directory")
 
 add_library(hermes_wrapper SHARED
-    hermes_context_jni.cpp
+    cpp/hermes_context_jni.cpp
 )
 
 # Link against the prebuilt Hermes shared library

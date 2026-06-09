@@ -1,0 +1,1 @@
+/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/build/intermediates/cxx/Debug/3p235h1l/obj/arm64-v8a

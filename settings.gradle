@@ -1,1 +1,21 @@
-include ':app', ':wrapper-android', ':wrapper-java', ':hermes-engine'
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "hermes-android-wrapper"
+include ':app'
+include ':wrapper-android'
+include ':wrapper-java'
+include ':hermes-engine'

@@ -1,0 +1,5 @@
+# ninja log v5
+0	41	0	clean	b017576d995a88c1
+0	92	0	clean	b017576d995a88c1
+0	280	1780993211772453922	CMakeFiles/hermes_wrapper.dir/cpp/hermes_context_jni.cpp.o	2815bcb7bcdf88cb
+281	402	1780993211893711956	/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/build/intermediates/cxx/Debug/3p235h1l/obj/x86/libhermes_wrapper.so	11cad98f30370041

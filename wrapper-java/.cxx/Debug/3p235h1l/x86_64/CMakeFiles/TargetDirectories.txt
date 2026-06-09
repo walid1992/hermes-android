@@ -1,0 +1,3 @@
+/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/.cxx/Debug/3p235h1l/x86_64/CMakeFiles/hermes_wrapper.dir
+/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/.cxx/Debug/3p235h1l/x86_64/CMakeFiles/edit_cache.dir
+/Users/admin/Desktop/dev/hermes-android-wrapper/wrapper-java/.cxx/Debug/3p235h1l/x86_64/CMakeFiles/rebuild_cache.dir
