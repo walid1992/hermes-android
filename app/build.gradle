@@ -38,9 +38,10 @@ android {
 }
 
 dependencies {
-    implementation project(':wrapper-android')
+//    implementation project(':wrapper-android')
 //    implementation project(':hermes-engine')
-//    implementation 'com.github.walid1992.hermes-android:wrapper-android:0.1.0'
+    implementation 'com.github.walid1992.hermes-android:wrapper-android:v0.1.1'
+    implementation 'com.github.walid1992.hermes-android:hermes-engine:v0.1.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
