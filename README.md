@@ -37,8 +37,12 @@ hermes-android-wrapper/
 ### 1. Add dependency
 
 ```gradle
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
-    implementation project(':wrapper-android')
+    implementation 'com.github.walid1992.hermes-android:wrapper-android:v0.1.0'
 }
 ```
 

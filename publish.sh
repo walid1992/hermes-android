@@ -1,19 +1,17 @@
 #!/bin/bash
 #
-# publish.sh — Build and publish hermes-android-wrapper to Maven
+# publish.sh — Build and publish hermes-android-wrapper
 #
 # Usage:
 #   ./publish.sh local       # Publish to local repo (build/maven-repo/) for testing
-#   ./publish.sh github      # Publish to GitHub Packages
-#   ./publish.sh [version]   # Override version (e.g., ./publish.sh github 0.2.0)
+#   ./publish.sh [version]   # Override version (e.g., ./publish.sh local 0.2.0)
 #
-# Prerequisites for GitHub Packages:
-#   export GITHUB_ACTOR=walid1992
-#   export GITHUB_TOKEN=ghp_xxxxx   (needs write:packages scope)
-#
-#   Or set in ~/.gradle/gradle.properties:
-#     gpr.user=walid1992
-#     gpr.key=ghp_xxxxx
+# For public release via JitPack:
+#   1. Tag a release: git tag v0.1.0 && git push origin v0.1.0
+#   2. Visit: https://jitpack.io/#walid1992/hermes-android
+#   3. Users add:
+#        repositories { maven { url 'https://jitpack.io' } }
+#        implementation 'com.github.walid1992.hermes-android:wrapper-android:v0.1.0'
 #
 
 set -euo pipefail
@@ -38,7 +36,6 @@ VERSION_OVERRIDE="${2:-}"
 # Validate target
 case "$TARGET" in
     local)   REPO_NAME="local" ;;
-    github)  REPO_NAME="GitHubPackages" ;;
     *)
         # If first arg looks like a version, assume local + version override
         if [[ "$TARGET" =~ ^[0-9]+\.[0-9]+\.[0-9]+ ]]; then
@@ -46,7 +43,7 @@ case "$TARGET" in
             TARGET="local"
             REPO_NAME="local"
         else
-            error "Unknown target: $TARGET. Use 'local' or 'github'"
+            error "Unknown target: $TARGET. Use 'local'"
         fi
         ;;
 esac
@@ -58,21 +55,13 @@ if [ -n "$VERSION_OVERRIDE" ]; then
 fi
 
 # Read current version
-CURRENT_VERSION=$(grep "versionName = " build.gradle | head -1 | sed "s/.*versionName = '\\(.*\\)'/\\1/")
-GROUP_ID=$(grep "groupId = " build.gradle | head -1 | sed "s/.*groupId = '\\(.*\\)'/\\1/")
+CURRENT_VERSION=$(grep "versionName = " build.gradle | head -1 | sed "s/.*versionName = '\(.*\)'/\1/")
+GROUP_ID=$(grep "groupId = " build.gradle | head -1 | sed "s/.*groupId = '\(.*\)'/\1/")
 
 info "Publishing hermes-android-wrapper v${CURRENT_VERSION}"
 info "  Group: ${GROUP_ID}"
 info "  Target: ${TARGET}"
 echo ""
-
-# Check GitHub credentials if needed
-if [ "$TARGET" = "github" ]; then
-    if [ -z "${GITHUB_TOKEN:-}" ] && ! grep -q "gpr.key" ~/.gradle/gradle.properties 2>/dev/null; then
-        error "GITHUB_TOKEN not set. Export it or add gpr.key to ~/.gradle/gradle.properties"
-    fi
-    info "GitHub credentials: OK"
-fi
 
 # Clean build
 info "Cleaning previous build..."
@@ -94,40 +83,32 @@ echo ""
 info "✅ Published successfully!"
 echo ""
 
-if [ "$TARGET" = "local" ]; then
-    LOCAL_REPO="$SCRIPT_DIR/build/maven-repo"
-    info "Local repo: $LOCAL_REPO"
-    echo ""
-    echo "  To use in another project, add to build.gradle:"
-    echo ""
-    echo "    repositories {"
-    echo "        maven { url '$LOCAL_REPO' }"
-    echo "    }"
-    echo ""
-    echo "    dependencies {"
-    echo "        implementation '${GROUP_ID}:wrapper-android:${CURRENT_VERSION}'"
-    echo "        // hermes-engine is pulled transitively"
-    echo "    }"
-    echo ""
-    # Show published files
-    info "Published artifacts:"
-    find "$LOCAL_REPO" -name "*.aar" -o -name "*.pom" | sort | while read f; do
-        echo "    $(basename "$f")"
-    done
-else
-    echo "  Maven coordinates:"
-    echo ""
-    echo "    repositories {"
-    echo "        maven {"
-    echo "            url 'https://maven.pkg.github.com/walid1992/hermes-android'"
-    echo "            credentials {"
-    echo "                username = project.findProperty('gpr.user') ?: System.getenv('GITHUB_ACTOR')"
-    echo "                password = project.findProperty('gpr.key') ?: System.getenv('GITHUB_TOKEN')"
-    echo "            }"
-    echo "        }"
-    echo "    }"
-    echo ""
-    echo "    dependencies {"
-    echo "        implementation '${GROUP_ID}:wrapper-android:${CURRENT_VERSION}'"
-    echo "    }"
-fi
+LOCAL_REPO="$SCRIPT_DIR/build/maven-repo"
+info "Local repo: $LOCAL_REPO"
+echo ""
+echo "  To use in another project, add to build.gradle:"
+echo ""
+echo "    repositories {"
+echo "        maven { url '$LOCAL_REPO' }"
+echo "    }"
+echo ""
+echo "    dependencies {"
+echo "        implementation '${GROUP_ID}:wrapper-android:${CURRENT_VERSION}'"
+echo "        // hermes-engine is pulled transitively"
+echo "    }"
+echo ""
+# Show published files
+info "Published artifacts:"
+find "$LOCAL_REPO" -name "*.aar" -o -name "*.pom" | sort | while read f; do
+    echo "    $(basename "$f")"
+done
+
+echo ""
+info "For public release via JitPack:"
+echo "  1. git tag v${CURRENT_VERSION}"
+echo "  2. git push origin v${CURRENT_VERSION}"
+echo "  3. Visit https://jitpack.io/#walid1992/hermes-android"
+echo ""
+echo "  Users add:"
+echo "    repositories { maven { url 'https://jitpack.io' } }"
+echo "    implementation 'com.github.walid1992.hermes-android:wrapper-android:v${CURRENT_VERSION}'"

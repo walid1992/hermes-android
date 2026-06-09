@@ -68,6 +68,15 @@ afterEvaluate {
                         }
                     }
                 }
+
+                // Fix transitive dependency for JitPack multi-module
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+                    def depNode = dependenciesNode.appendNode('dependency')
+                    depNode.appendNode('groupId', 'com.github.walid1992.hermes-android')
+                    depNode.appendNode('artifactId', 'hermes-engine')
+                    depNode.appendNode('version', rootProject.ext.versionName)
+                }
             }
         }
     }

@@ -11,7 +11,7 @@ buildscript {
 
 // Library coordinates — used by submodule publish configs
 ext {
-    groupId = 'com.aspect.hermes'
+    groupId = 'com.github.walid1992.hermes-android'
     versionName = '0.1.0'
     versionCode = 1
 }
@@ -22,15 +22,6 @@ subprojects {
         if (plugins.hasPlugin('maven-publish')) {
             publishing {
                 repositories {
-                    // GitHub Packages
-                    maven {
-                        name = "GitHubPackages"
-                        url = uri("https://maven.pkg.github.com/walid1992/hermes-android")
-                        credentials {
-                            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR") ?: ""
-                            password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN") ?: ""
-                        }
-                    }
                     // Local repo for testing
                     maven {
                         name = "local"

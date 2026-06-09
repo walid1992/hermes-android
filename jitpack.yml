@@ -1,0 +1,8 @@
+jdk:
+  - openjdk17
+
+before_install:
+  - sdk install gradle 8.2
+
+install:
+  - ./gradlew :hermes-engine:publishToMavenLocal :wrapper-android:publishToMavenLocal
